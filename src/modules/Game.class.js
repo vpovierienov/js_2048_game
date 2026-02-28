@@ -145,75 +145,61 @@ class Game {
   }
 
   start() {
-    const indexOfRow = Math.floor(Math.random() * 4);
-    const indexOfColumn = Math.floor(Math.random() * 4);
-    const chanceNumber = Math.floor(Math.random() * 101);
-    let number;
-
-    if (chanceNumber < 10) {
-      number = 4;
-    } else {
-      number = 2;
-    }
-
-    this.board[indexOfRow][indexOfColumn] = number;
-    this.gameStarted = true;
+    this.score = 0;
     this.isStarted = true;
+    this.gameStarted = true;
+
+    this.addNewNumber();
+    this.addNewNumber();
   }
 
   restart() {
-    const indexOfRow = Math.floor(Math.random() * 4);
-    const indexOfColumn = Math.floor(Math.random() * 4);
-    const chanceNumber = Math.floor(Math.random() * 101);
-    let number;
-
     this.score = 0;
 
-    if (chanceNumber < 10) {
-      number = 4;
-    } else {
-      number = 2;
-    }
-
+    // очистка поля
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        if (indexOfRow === i && indexOfColumn === j) {
-          this.board[i][j] = number;
-        } else {
-          this.board[i][j] = 0;
-        }
+        this.board[i][j] = 0;
       }
     }
+
+    this.isStarted = true;
+    this.gameStarted = true;
+
+    // добавляем ДВЕ плитки
+    this.addNewNumber();
+    this.addNewNumber();
   }
 
   addNewNumber() {
     if (this.gameStarted) {
-      let indexOfRow = Math.floor(Math.random() * 4);
-      let indexOfColumn = Math.floor(Math.random() * 4);
-      const chanceNumber = Math.floor(Math.random() * 101);
-      let number;
-      let check = true;
+      let emptyCells = [];
 
-      while (check) {
-        if (!this.canMove()) {
-          check = false;
-        }
-
-        if (this.board[indexOfRow][indexOfColumn] === 0) {
-          check = false;
-
-          if (chanceNumber < 10) {
-            number = 4;
-          } else {
-            number = 2;
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          if (this.board[i][j] === 0) {
+            emptyCells.push([i, j]);
           }
-
-          this.board[indexOfRow][indexOfColumn] = number;
-        } else {
-          indexOfRow = Math.floor(Math.random() * 4);
-          indexOfColumn = Math.floor(Math.random() * 4);
         }
       }
+
+      if (emptyCells.length === 0) {
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * emptyCells.length);
+      const [row, col] = emptyCells[randomIndex];
+
+      const chanceNumber = Math.floor(Math.random() * 101);
+      let number;
+
+      if (chanceNumber < 10) {
+        number = 4;
+      } else {
+        number = 2;
+      }
+
+      this.board[row][col] = number;
     }
   }
 
@@ -241,3 +227,4 @@ class Game {
 }
 
 module.exports = Game;
+
