@@ -144,6 +144,7 @@ class Game {
     return 'lose';
   }
 
+  // Старт игры — теперь две плитки
   start() {
     this.score = 0;
     this.isStarted = true;
@@ -153,10 +154,11 @@ class Game {
     this.addNewNumber();
   }
 
+  // Рестарт игры — теперь две плитки
   restart() {
     this.score = 0;
 
-    // очистка поля
+    // очищаем поле
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
         this.board[i][j] = 0;
@@ -166,7 +168,6 @@ class Game {
     this.isStarted = true;
     this.gameStarted = true;
 
-    // добавляем ДВЕ плитки
     this.addNewNumber();
     this.addNewNumber();
   }
@@ -183,23 +184,11 @@ class Game {
         }
       }
 
-      if (emptyCells.length === 0) {
-        return;
-      }
+      if (emptyCells.length === 0) return;
 
-      const randomIndex = Math.floor(Math.random() * emptyCells.length);
-      const [row, col] = emptyCells[randomIndex];
-
+      const [row, col] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
       const chanceNumber = Math.floor(Math.random() * 101);
-      let number;
-
-      if (chanceNumber < 10) {
-        number = 4;
-      } else {
-        number = 2;
-      }
-
-      this.board[row][col] = number;
+      this.board[row][col] = chanceNumber < 10 ? 4 : 2;
     }
   }
 
@@ -208,17 +197,9 @@ class Game {
 
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        if (state[i][j] === 0) {
-          return true;
-        }
-
-        if (j < 3 && state[i][j] === state[i][j + 1]) {
-          return true;
-        }
-
-        if (i < 3 && state[i][j] === state[i + 1][j]) {
-          return true;
-        }
+        if (state[i][j] === 0) return true;
+        if (j < 3 && state[i][j] === state[i][j + 1]) return true;
+        if (i < 3 && state[i][j] === state[i + 1][j]) return true;
       }
     }
 
@@ -227,4 +208,5 @@ class Game {
 }
 
 module.exports = Game;
+        
 
