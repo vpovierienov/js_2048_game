@@ -13,10 +13,10 @@ class Game {
     this.isStarted = false;
   }
 
+  // Движения
   moveLeft() {
     for (let i = 0; i < 4; i++) {
       const numbers = this.board[i].filter((val) => val !== 0);
-
       for (let j = 0; j < numbers.length - 1; j++) {
         if (numbers[j] === numbers[j + 1]) {
           numbers[j] *= 2;
@@ -24,11 +24,7 @@ class Game {
           numbers.splice(j + 1, 1);
         }
       }
-
-      while (numbers.length < 4) {
-        numbers.push(0);
-      }
-
+      while (numbers.length < 4) numbers.push(0);
       this.board[i] = numbers;
     }
   }
@@ -36,7 +32,6 @@ class Game {
   moveRight() {
     for (let i = 0; i < 4; i++) {
       const numbers = this.board[i].filter((val) => val !== 0);
-
       for (let j = numbers.length - 1; j > 0; j--) {
         if (numbers[j] === numbers[j - 1]) {
           numbers[j] *= 2;
@@ -45,11 +40,7 @@ class Game {
           j--;
         }
       }
-
-      while (numbers.length < 4) {
-        numbers.unshift(0);
-      }
-
+      while (numbers.length < 4) numbers.unshift(0);
       this.board[i] = numbers;
     }
   }
@@ -57,13 +48,9 @@ class Game {
   moveUp() {
     for (let col = 0; col < 4; col++) {
       let column = [];
-
       for (let row = 0; row < 4; row++) {
-        if (this.board[row][col] !== 0) {
-          column.push(this.board[row][col]);
-        }
+        if (this.board[row][col] !== 0) column.push(this.board[row][col]);
       }
-
       for (let i = 0; i < column.length - 1; i++) {
         if (column[i] === column[i + 1]) {
           column[i] *= 2;
@@ -71,27 +58,17 @@ class Game {
           column.splice(i + 1, 1);
         }
       }
-
-      while (column.length < 4) {
-        column.push(0);
-      }
-
-      for (let row = 0; row < 4; row++) {
-        this.board[row][col] = column[row];
-      }
+      while (column.length < 4) column.push(0);
+      for (let row = 0; row < 4; row++) this.board[row][col] = column[row];
     }
   }
 
   moveDown() {
     for (let col = 0; col < 4; col++) {
       let column = [];
-
       for (let row = 0; row < 4; row++) {
-        if (this.board[row][col] !== 0) {
-          column.push(this.board[row][col]);
-        }
+        if (this.board[row][col] !== 0) column.push(this.board[row][col]);
       }
-
       for (let i = column.length - 1; i > 0; i--) {
         if (column[i] === column[i - 1]) {
           column[i] *= 2;
@@ -100,21 +77,17 @@ class Game {
           i--;
         }
       }
-
-      while (column.length < 4) {
-        column.unshift(0);
-      }
-
-      for (let row = 0; row < 4; row++) {
-        this.board[row][col] = column[row];
-      }
+      while (column.length < 4) column.unshift(0);
+      for (let row = 0; row < 4; row++) this.board[row][col] = column[row];
     }
   }
 
+  // Старт игры с двумя плитками
   start() {
     this.score = 0;
     this.isStarted = true;
 
+    // очищаем поле
     this.board = [
       [0, 0, 0, 0],
       [0, 0, 0, 0],
@@ -122,32 +95,39 @@ class Game {
       [0, 0, 0, 0],
     ];
 
+    // добавляем первую плитку
     this.addNewNumber();
-    this.addNewNumber();
+
+    // добавляем вторую плитку в другую клетку
+    let emptyCells = [];
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        if (this.board[i][j] === 0) emptyCells.push([i, j]);
+      }
+    }
+    if (emptyCells.length > 0) {
+      const [row, col] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+      this.board[row][col] = Math.random() < 0.1 ? 4 : 2;
+    }
   }
 
+  // Рестарт игры
   restart() {
     this.start();
   }
 
+  // Добавление новой плитки после хода
   addNewNumber() {
     const emptyCells = [];
-
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        if (this.board[i][j] === 0) {
-          emptyCells.push([i, j]);
-        }
+        if (this.board[i][j] === 0) emptyCells.push([i, j]);
       }
     }
 
-    if (!emptyCells.length) {
-      return;
-    }
+    if (!emptyCells.length) return;
 
-    const [row, col] =
-      emptyCells[Math.floor(Math.random() * emptyCells.length)];
-
+    const [row, col] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
     this.board[row][col] = Math.random() < 0.1 ? 4 : 2;
   }
 
@@ -161,35 +141,20 @@ class Game {
 
   getStatus() {
     for (let i = 0; i < 4; i++) {
-      if (this.board[i].includes(2048)) {
-        return 'win';
-      }
+      if (this.board[i].includes(2048)) return 'win';
     }
-
-    if (this.canMove()) {
-      return this.isStarted ? 'playing' : 'idle';
-    }
-
+    if (this.canMove()) return this.isStarted ? 'playing' : 'idle';
     return 'lose';
   }
 
   canMove() {
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        if (this.board[i][j] === 0) {
-          return true;
-        }
-
-        if (j < 3 && this.board[i][j] === this.board[i][j + 1]) {
-          return true;
-        }
-
-        if (i < 3 && this.board[i][j] === this.board[i + 1][j]) {
-          return true;
-        }
+        if (this.board[i][j] === 0) return true;
+        if (j < 3 && this.board[i][j] === this.board[i][j + 1]) return true;
+        if (i < 3 && this.board[i][j] === this.board[i + 1][j]) return true;
       }
     }
-
     return false;
   }
 }
