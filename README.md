@@ -1,1 +1,1 @@
-- [DEMO LINK](vpovivierienov.github.io/js_2048_game/)
+https://vpovierienov.github.io/js_2048_game/
