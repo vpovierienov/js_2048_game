@@ -145,43 +145,46 @@ class Game {
   }
 
   start() {
-    const indexOfRow = Math.floor(Math.random() * 4);
-    const indexOfColumn = Math.floor(Math.random() * 4);
-    const chanceNumber = Math.floor(Math.random() * 101);
-    let number;
-
-    if (chanceNumber < 10) {
-      number = 4;
-    } else {
-      number = 2;
-    }
-
-    this.board[indexOfRow][indexOfColumn] = number;
     this.gameStarted = true;
     this.isStarted = true;
+
+    let count = 0;
+
+    while (count < 2) {
+      const r = Math.floor(Math.random() * 4);
+      const c = Math.floor(Math.random() * 4);
+
+      // Добавляем двойку только если клетка пустая
+      if (this.board[r][c] === 0) {
+        this.board[r][c] = 2;
+        count++;
+      }
+    }
   }
 
   restart() {
-    const indexOfRow = Math.floor(Math.random() * 4);
-    const indexOfColumn = Math.floor(Math.random() * 4);
-    const chanceNumber = Math.floor(Math.random() * 101);
-    let number;
-
     this.score = 0;
 
-    if (chanceNumber < 10) {
-      number = 4;
-    } else {
-      number = 2;
-    }
+    this.board = [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ];
 
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
-        if (indexOfRow === i && indexOfColumn === j) {
-          this.board[i][j] = number;
-        } else {
-          this.board[i][j] = 0;
-        }
+    this.gameStarted = true;
+    this.isStarted = true;
+
+    let count = 0;
+
+    while (count < 2) {
+      const r = Math.floor(Math.random() * 4);
+      const c = Math.floor(Math.random() * 4);
+
+      // Добавляем двойку только если клетка пустая
+      if (this.board[r][c] === 0) {
+        this.board[r][c] = 2;
+        count++;
       }
     }
   }
